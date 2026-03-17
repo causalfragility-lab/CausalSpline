@@ -1,0 +1,175 @@
+---
+title: "Introduction to CausalSpline: Nonlinear Causal Dose-Response Estimation"
+author: "Your Name"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to CausalSpline}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 4.5,
+  warning = FALSE
+)
+```
+
+## Why nonlinear causal effects?
+
+Most causal inference software assumes the treatment effect enters linearly:
+
+$$Y = \beta_0 + \beta_1 T + \gamma X + \varepsilon$$
+
+But many real-world relationships are genuinely nonlinear:
+
+- **Dosage effects** in pharmacology (toxicity thresholds)
+- **Pollution-health curves** (non-monotone at extreme exposures)
+- **Education/income** (diminishing returns)
+- **Policy intensity** (minimum effective dose, saturation)
+
+**CausalSpline** replaces the linear $\beta_1 T$ with a spline $f(T)$:
+
+$$Y = \beta_0 + f(T) + \gamma X + \varepsilon, \quad E[Y(t)] = \beta_0 + f(t)$$
+
+under standard unconfoundedness and positivity assumptions.
+
+---
+
+## Installation
+
+```r
+# From CRAN (once published)
+install.packages("CausalSpline")
+
+# Development version from GitHub
+remotes::install_github("yourgithub/CausalSpline")
+```
+
+---
+
+## Quick start
+
+```{r setup}
+library(CausalSpline)
+```
+
+### 1. Simulate data with a threshold effect
+
+```{r simulate}
+set.seed(42)
+dat <- simulate_dose_response(n = 600, dgp = "threshold", confounding = 0.6)
+head(dat)
+```
+
+The true dose-response is flat below $T = 3$, then rises linearly:
+
+```{r true-curve, fig.cap="True vs observed relationship"}
+plot(dat$T, dat$Y, pch = 16, col = rgb(0, 0, 0, 0.2),
+     xlab = "Treatment T", ylab = "Outcome Y",
+     main = "Observed data (confounded)")
+lines(sort(dat$T), dat$true_effect[order(dat$T)],
+      col = "red", lwd = 2)
+legend("topleft", legend = "True f(T)", col = "red", lwd = 2)
+```
+
+### 2. Fit with IPW
+
+```{r fit-ipw}
+fit_ipw <- causal_spline(
+  Y ~ T | X1 + X2 + X3,
+  data       = dat,
+  method     = "ipw",
+  df_exposure = 5,
+  eval_grid  = 100
+)
+summary(fit_ipw)
+```
+
+```{r plot-ipw, fig.cap="IPW estimated dose-response with 95% CI"}
+# Build true curve data frame for overlay
+truth_df <- data.frame(
+  t           = dat$T,
+  true_effect = dat$true_effect
+)
+plot(fit_ipw, truth = truth_df)
+```
+
+### 3. Fit with G-computation
+
+```{r fit-gcomp}
+fit_gc <- causal_spline(
+  Y ~ T | X1 + X2 + X3,
+  data        = dat,
+  method      = "gcomp",
+  df_exposure = 5
+)
+plot(fit_gc, truth = truth_df,
+     title = "G-computation — Threshold DGP")
+```
+
+### 4. Check overlap (positivity)
+
+```{r overlap}
+ov <- check_overlap(dat$T, fit_ipw$weights, plot = TRUE)
+cat("ESS:", round(ov$ess), "/ n =", nrow(dat), "\n")
+ov$plot
+```
+
+---
+
+## Comparing DGPs
+
+```{r compare-dgps, fig.height=8, fig.width=7}
+dgps <- c("threshold", "diminishing", "nonmonotone", "sinusoidal")
+plots <- lapply(dgps, function(d) {
+  dat_d <- simulate_dose_response(500, dgp = d, seed = 1)
+  fit_d <- causal_spline(Y ~ T | X1 + X2 + X3, data = dat_d,
+                          method = "ipw", df_exposure = 5,
+                          verbose = FALSE)
+  truth_d <- data.frame(t = dat_d$T, true_effect = dat_d$true_effect)
+  plot(fit_d, truth = truth_d,
+       title = paste("DGP:", d),
+       rug = FALSE)
+})
+
+# Combine with patchwork (if available) or print individually
+for (p in plots) print(p)
+```
+
+---
+
+## Choosing degrees of freedom
+
+The `df_exposure` argument controls spline flexibility. Too few df = underfitting; too many = high variance. As a guide:
+
+| Shape                  | Recommended df |
+|------------------------|----------------|
+| Linear / simple trend  | 3              |
+| One bend / threshold   | 4–5            |
+| Inverted-U / hump      | 5–6            |
+| Oscillatory            | 7–10           |
+
+You can use AIC/BIC on the outcome model or cross-validation for selection.
+
+---
+
+## Methods summary
+
+| Argument           | Consistent if ...                          |
+|--------------------|--------------------------------------------|
+| `method = "ipw"`   | GPS model correctly specified              |
+| `method = "gcomp"` | Outcome model correctly specified          |
+| `method = "dr"`    | At least one of the two models is correct  |
+
+---
+
+## References
+
+- Hirano, K., & Imbens, G. W. (2004). *The propensity score with continuous treatments.* doi:10.1002/0470090456.ch7  
+- Imbens, G. W. (2000). *The role of the propensity score in estimating dose-response functions.* Biometrika.  
+- Flores et al. (2012). *Estimating the effects of length of exposure to instruction.* Review of Economics and Statistics.
