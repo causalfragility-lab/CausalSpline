@@ -177,7 +177,7 @@ citation("CausalSpline")
 
 ## License
 
-GPL (>= 3) — see [LICENSE.md](LICENSE.md) for details.
- 
+GPL (>= 3)
+
 Maintainer: Subir Hait <haitsubi@msu.edu>  
 Michigan State University
