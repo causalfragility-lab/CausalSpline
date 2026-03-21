@@ -39,7 +39,7 @@ change (high first derivative) or inflection / diminishing returns (second
 derivative changes sign).
 }
 \examples{
-dat <- simulate_dose_response(400, dgp = "threshold")
+dat <- simulate_dose_response(200, dgp = "threshold")
 fit <- causal_spline(Y ~ T | X1 + X2 + X3, data = dat)
 gd  <- gradient_curve(fit)
 head(gd)

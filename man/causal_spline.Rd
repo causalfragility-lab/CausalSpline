@@ -102,7 +102,7 @@ assumptions on the functional form.
 \examples{
 # Simulate nonlinear dose-response data
 set.seed(42)
-dat <- simulate_dose_response(n = 500, dgp = "threshold")
+dat <- simulate_dose_response(n = 200, dgp = "threshold")
 
 # Fit with IPW
 fit <- causal_spline(Y ~ T | X1 + X2 + X3, data = dat, method = "ipw",

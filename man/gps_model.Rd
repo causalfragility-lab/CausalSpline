@@ -44,7 +44,7 @@ linearly by default; spline transformations of the treatment are not needed
 here since this models the treatment, not the outcome.
 }
 \examples{
-dat <- simulate_dose_response(n = 400, dgp = "linear")
+dat <- simulate_dose_response(n = 200, dgp = "linear")
 X   <- as.matrix(dat[, c("X1", "X2", "X3")])
 gps <- gps_model(dat$T, X)
 summary(gps$model)

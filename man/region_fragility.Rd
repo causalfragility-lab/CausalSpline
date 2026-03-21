@@ -63,7 +63,7 @@ across dose ranges (e.g., low vs. high dose) or summarising instability
 at a policy-relevant threshold.
 }
 \examples{
-dat <- simulate_dose_response(400, dgp = "threshold")
+dat <- simulate_dose_response(200, dgp = "threshold")
 fit <- causal_spline(Y ~ T | X1 + X2 + X3, data = dat)
 region_fragility(fit, a = 2, b = 5)
 

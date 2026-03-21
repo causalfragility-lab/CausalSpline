@@ -28,7 +28,7 @@ A data frame with columns \code{t}, \code{estimate},
 Predict E[Y(t)] at new treatment values
 }
 \examples{
-dat <- simulate_dose_response(400)
+dat <- simulate_dose_response(200)
 fit <- causal_spline(Y ~ T | X1 + X2 + X3, data = dat)
 predict(fit, newt = c(1, 2, 3, 4, 5))
 

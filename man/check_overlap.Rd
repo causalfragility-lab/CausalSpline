@@ -29,7 +29,7 @@ strata and returns effective sample size (ESS) and weight diagnostics to
 assess the positivity (overlap) assumption.
 }
 \examples{
-dat <- simulate_dose_response(500)
+dat <- simulate_dose_response(200)
 X   <- as.matrix(dat[, c("X1", "X2", "X3")])
 gps <- gps_model(dat$T, X)
 w   <- trim_weights(abs(1 / stats::residuals(gps$model)), c(0.01, 0.99))

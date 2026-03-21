@@ -27,7 +27,7 @@
 #' }
 #'
 #' @examples
-#' dat <- simulate_dose_response(400, dgp = "threshold")
+#' dat <- simulate_dose_response(200, dgp = "threshold")
 #' fit <- causal_spline(Y ~ T | X1 + X2 + X3, data = dat)
 #' gd  <- gradient_curve(fit)
 #' head(gd)
@@ -152,7 +152,7 @@ gradient_curve <- function(object, grid = NULL, h = NULL, eps = 1e-6, ...) {
 #' }
 #'
 #' @examples
-#' dat <- simulate_dose_response(400, dgp = "threshold")
+#' dat <- simulate_dose_response(200, dgp = "threshold")
 #' fit <- causal_spline(Y ~ T | X1 + X2 + X3, data = dat)
 #' fc  <- fragility_curve(fit, t_obs = dat$T)
 #' plot(fc)
@@ -249,7 +249,7 @@ fragility_curve <- function(object,
 #' }
 #'
 #' @examples
-#' dat <- simulate_dose_response(400, dgp = "threshold")
+#' dat <- simulate_dose_response(200, dgp = "threshold")
 #' fit <- causal_spline(Y ~ T | X1 + X2 + X3, data = dat)
 #' region_fragility(fit, a = 2, b = 5)
 #'
@@ -332,7 +332,7 @@ region_fragility <- function(object,
 #'   two \code{ggplot2} objects is returned invisibly.
 #'
 #' @examples
-#' dat <- simulate_dose_response(400, dgp = "threshold")
+#' dat <- simulate_dose_response(200, dgp = "threshold")
 #' fit <- causal_spline(Y ~ T | X1 + X2 + X3, data = dat)
 #' fc  <- fragility_curve(fit, t_obs = dat$T)
 #' plot(fc)

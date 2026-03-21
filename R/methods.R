@@ -2,6 +2,13 @@
 #'
 #' @param x A \code{causal_spline} object.
 #' @param ... Ignored.
+#'
+#' @return Invisibly returns the input \code{causal_spline} object \code{x},
+#'   unchanged. The function is called for its side effect of printing a
+#'   compact summary to the console, showing the estimation method, spline
+#'   type, degrees of freedom, sample size, treatment range, and number of
+#'   evaluation points on the dose-response curve.
+#'
 #' @method print causal_spline
 #' @export
 print.causal_spline <- function(x, ...) {
@@ -21,6 +28,16 @@ print.causal_spline <- function(x, ...) {
 #'
 #' @param object A \code{causal_spline} object.
 #' @param ... Ignored.
+#'
+#' @return Invisibly returns the input \code{causal_spline} object
+#'   \code{object}, unchanged. The function is called for its side effect of
+#'   printing a detailed summary to the console, including the original call,
+#'   estimation method, spline configuration, treatment variable statistics,
+#'   IPW diagnostics (effective sample size and weight range, if applicable),
+#'   and a table of the estimated dose-response curve at seven representative
+#'   percentile points (treatment value, point estimate, standard error, and
+#'   confidence interval bounds).
+#'
 #' @method summary causal_spline
 #' @export
 summary.causal_spline <- function(object, ...) {
@@ -82,7 +99,7 @@ summary.causal_spline <- function(object, ...) {
 #' @return A \code{ggplot2} object.
 #'
 #' @examples
-#' dat <- simulate_dose_response(500, dgp = "threshold")
+#' dat <- simulate_dose_response(200, dgp = "threshold")
 #' fit <- causal_spline(Y ~ T | X1 + X2 + X3, data = dat)
 #' plot(fit)
 #'
@@ -153,7 +170,7 @@ plot.causal_spline <- function(x, rug = TRUE, truth = NULL,
 #'   outside the observed treatment support.
 #'
 #' @examples
-#' dat <- simulate_dose_response(400)
+#' dat <- simulate_dose_response(200)
 #' fit <- causal_spline(Y ~ T | X1 + X2 + X3, data = dat)
 #' predict(fit, newt = c(1, 2, 3, 4, 5))
 #'
@@ -229,7 +246,7 @@ predict.causal_spline <- function(object, newt, se_fit = FALSE,
 #'   \code{lower}, \code{upper}.
 #'
 #' @examples
-#' dat <- simulate_dose_response(400)
+#' dat <- simulate_dose_response(200)
 #' fit <- causal_spline(Y ~ T | X1 + X2 + X3, data = dat)
 #' curve_df <- dose_response_curve(fit)
 #' head(curve_df)

@@ -39,7 +39,7 @@ with pointwise confidence bands and an optional rug for the observed
 treatment distribution.
 }
 \examples{
-dat <- simulate_dose_response(500, dgp = "threshold")
+dat <- simulate_dose_response(200, dgp = "threshold")
 fit <- causal_spline(Y ~ T | X1 + X2 + X3, data = dat)
 plot(fit)
 

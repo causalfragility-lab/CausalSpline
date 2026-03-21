@@ -24,7 +24,7 @@
 #' }
 #'
 #' @examples
-#' dat <- simulate_dose_response(n = 400, dgp = "linear")
+#' dat <- simulate_dose_response(n = 200, dgp = "linear")
 #' X   <- as.matrix(dat[, c("X1", "X2", "X3")])
 #' gps <- gps_model(dat$T, X)
 #' summary(gps$model)

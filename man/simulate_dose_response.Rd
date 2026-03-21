@@ -48,11 +48,11 @@ confounders, and a nonlinear dose-response outcome. Useful for testing,
 benchmarking, and illustrating the CausalSpline package.
 }
 \examples{
-dat <- simulate_dose_response(n = 500, dgp = "threshold", seed = 1)
+dat <- simulate_dose_response(n = 200, dgp = "threshold", seed = 1)
 plot(dat$T, dat$true_effect, type = "l",
      xlab = "Treatment", ylab = "True causal effect")
 
-dat2 <- simulate_dose_response(n = 1000, dgp = "nonmonotone",
+dat2 <- simulate_dose_response(n = 200, dgp = "nonmonotone",
                                 confounding = 0.8, seed = 42)
 hist(dat2$T, main = "Treatment distribution", xlab = "T")
 

@@ -25,7 +25,7 @@ supplied to \code{\link{fragility_curve}}), a scaled density ribbon is
 overlaid on the fragility panel to flag low-support regions.
 }
 \examples{
-dat <- simulate_dose_response(400, dgp = "threshold")
+dat <- simulate_dose_response(200, dgp = "threshold")
 fit <- causal_spline(Y ~ T | X1 + X2 + X3, data = dat)
 fc  <- fragility_curve(fit, t_obs = dat$T)
 plot(fc)

@@ -18,7 +18,7 @@ Convenience function to pull the estimated \eqn{E[Y(t)]} curve from a
 fitted \code{causal_spline} object.
 }
 \examples{
-dat <- simulate_dose_response(400)
+dat <- simulate_dose_response(200)
 fit <- causal_spline(Y ~ T | X1 + X2 + X3, data = dat)
 curve_df <- dose_response_curve(fit)
 head(curve_df)
